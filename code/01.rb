@@ -1,5 +1,5 @@
 require_relative '../input'
-lines = get_lines $0
+lines = get_lines $PROGRAM_NAME
 
 def fuelfuel(fuel)
   required_fuel = ((fuel / 3).floor) - 2
