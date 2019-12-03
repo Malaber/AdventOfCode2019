@@ -4,17 +4,24 @@ lines = get_lines $PROGRAM_NAME
 require 'set'
 
 wire_points = []
-wire_points[1] = Set[]
-wire_points[2] = Set[]
+wire_points[1] = {}
+wire_points[2] = {}
 
-def add_to_set!(x, y, set)
-  set << "X#{x},Y#{y}"
+def add_to_hash!(x, y, hash, steps)
+  hash["X#{x},Y#{y}"] = steps
+end
+
+def step!(hash, steps, x, y)
+  steps += 1
+  add_to_hash!(x, y, hash, steps)
+  steps
 end
 
 lines.each_with_index do |wire, index|
-  set = wire_points[index + 1]
+  hash = wire_points[index + 1]
   x = 0
   y = 0
+  steps = 0
 
   wire.split(',').each do |action|
     direction = action[0]
@@ -24,28 +31,28 @@ lines.each_with_index do |wire, index|
     when 'D'
       length.times do
         y -= 1
-        add_to_set!(x, y, set)
+        steps = step!(hash, steps, x, y)
       end
     when 'U'
       length.times do
         y += 1
-        add_to_set!(x, y, set)
+        steps = step!(hash, steps, x, y)
       end
     when 'R'
       length.times do
         x += 1
-        add_to_set!(x, y, set)
+        steps = step!(hash, steps, x, y)
       end
     when 'L'
       length.times do
         x -= 1
-        add_to_set!(x, y, set)
+        steps = step!(hash, steps, x, y)
       end
     end
   end
 end
 
-intersections = wire_points[1] & wire_points[2]
+intersections = wire_points[1].keys & wire_points[2].keys
 
 distances = {}
 
@@ -57,4 +64,6 @@ intersections.each do |inter|
   distances[inter] = y + x
 end
 
+puts "P1:"
 puts(distances.min_by { |_k, v| v })
+puts
