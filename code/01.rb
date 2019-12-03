@@ -1,4 +1,4 @@
-require_relative 'input'
+require_relative '../input'
 lines = get_lines $0
 
 def fuelfuel(fuel)
