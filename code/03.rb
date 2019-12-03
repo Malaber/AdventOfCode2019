@@ -64,6 +64,16 @@ intersections.each do |inter|
   distances[inter] = y + x
 end
 
+intersection_steps = {}
+
+intersections.each do |inter|
+  intersection_steps[inter] = wire_points[1][inter] + wire_points[2][inter]
+end
+
 puts "P1:"
 puts(distances.min_by { |_k, v| v })
+puts
+
+puts "P2:"
+puts(intersection_steps.min_by { |_k, v| v })
 puts
