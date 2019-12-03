@@ -10,7 +10,6 @@ def fuelfuel(fuel)
   end
 end
 
-
 allfuel = 0
 lines.each do |line|
   mass = line.to_i
