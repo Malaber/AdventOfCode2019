@@ -20,11 +20,15 @@ end
 def two_repeating_digits?(number)
   current = nil
 
-  number.digits.reverse.each do |digit|
-    last = current
-    current = digit
+  digits = number.digits.reverse
 
-    return true if current == last
+  digits.each_with_index do |_digit, index|
+    pre_last = digits[index - 2]
+    last = digits[index - 1]
+    current = digits[index]
+    next_dig = digits[index + 1]
+
+    return true if current == last && current != next_dig && current != pre_last
   end
   false
 end
