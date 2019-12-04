@@ -20,6 +20,16 @@ end
 def two_repeating_digits?(number)
   current = nil
 
+  number.digits.reverse.each do |digit|
+    last = current
+    current = digit
+
+    return true if current == last
+  end
+  false
+end
+
+def two_repeating_digits_on_steroids?(number)
   digits = number.digits.reverse
 
   digits.each_with_index do |_digit, index|
@@ -37,12 +47,22 @@ boundaries = lines.first.split('-')
 upper = boundaries.first.to_i
 lower = boundaries[1].to_i
 
-valid_bounds = Set.new
+valid_bounds_p1 = Set.new
 
 (upper..lower).each do |bound|
   if not_decreasing?(bound) && two_repeating_digits?(bound)
-    valid_bounds << bound
+    valid_bounds_p1 << bound
   end
 end
 
-puts "P1: #{valid_bounds.size}"
+valid_bounds_p2 = Set.new
+
+(upper..lower).each do |bound|
+  if not_decreasing?(bound) && two_repeating_digits_on_steroids?(bound)
+    valid_bounds_p2 << bound
+  end
+end
+
+puts "P1: #{valid_bounds_p1.size}"
+puts
+puts "P2: #{valid_bounds_p2.size}"
