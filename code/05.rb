@@ -31,21 +31,21 @@ def calculate_output(lines, noun = nil, verb = nil)
     op_code_digits = codes[current].digits.reverse
     op_code = op_code_digits.pop(2).join('').to_i
 
-    p1 = get_next_param_mode!(op_code_digits)
-    p2 = get_next_param_mode!(op_code_digits)
-    p3 = get_next_param_mode!(op_code_digits)
+    p1_mode = get_next_param_mode!(op_code_digits)
+    p2_mode = get_next_param_mode!(op_code_digits)
+    p3_mode = get_next_param_mode!(op_code_digits)
 
     case op_code
     when 1
       # addition
-      dig1 = get_parameter_value(current + 1, p1, codes)
-      dig2 = get_parameter_value(current + 2, p2, codes)
+      dig1 = get_parameter_value(current + 1, p1_mode, codes)
+      dig2 = get_parameter_value(current + 2, p2_mode, codes)
       codes[codes[current + 3]] = dig1 + dig2
       current += 4
     when 2
       # multiplication
-      dig1 = get_parameter_value(current + 1, p1, codes)
-      dig2 = get_parameter_value(current + 2, p2, codes)
+      dig1 = get_parameter_value(current + 1, p1_mode, codes)
+      dig2 = get_parameter_value(current + 2, p2_mode, codes)
       codes[codes[current + 3]] = dig1 * dig2
       current += 4
     when 3
@@ -55,7 +55,7 @@ def calculate_output(lines, noun = nil, verb = nil)
       current += 2
     when 4
       puts "Output Code:"
-      puts get_parameter_value(current + 1, p1, codes)
+      puts get_parameter_value(current + 1, p1_mode, codes)
       current += 2
     when 99
       current += 1
