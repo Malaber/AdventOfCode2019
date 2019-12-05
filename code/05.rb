@@ -18,18 +18,21 @@ def calculate_output(lines, noun = nil, verb = nil)
       dig1 = codes[codes[current + 1]]
       dig2 = codes[codes[current + 2]]
       codes[codes[current + 3]] = dig1 + dig2
+      current += 4
     when 2
       # multiplication
       dig1 = codes[codes[current + 1]]
       dig2 = codes[codes[current + 2]]
       codes[codes[current + 3]] = dig1 * dig2
+      current += 4
     when 99
+      current += 1
       running = false
     else
       puts 'The ship computer bursts into flames.'
+      current += 1
       running = false
     end
-    current += 4
   end
 
   output = codes[0]
