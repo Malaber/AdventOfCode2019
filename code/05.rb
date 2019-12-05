@@ -25,6 +25,15 @@ def calculate_output(lines, noun = nil, verb = nil)
       dig2 = codes[codes[current + 2]]
       codes[codes[current + 3]] = dig1 * dig2
       current += 4
+    when 3
+      puts "Input Code:"
+      input = gets.chomp
+      codes[codes[current + 1]] = input
+      current += 2
+      p codes
+    when 4
+      puts codes[codes[current + 1]]
+      current += 2
     when 99
       current += 1
       running = false
