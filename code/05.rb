@@ -63,12 +63,20 @@ def calculate_output(lines, noun = nil, verb = nil)
       # jump if true
       p1 = get_parameter_value(current + 1, p1_mode, codes)
       p2 = get_parameter_value(current + 2, p2_mode, codes)
-      current = p2 unless p1.zero?
+      if p1.zero?
+        current +=3
+      else
+        current = p2
+      end
     when 6
       # jump if false
       p1 = get_parameter_value(current + 1, p1_mode, codes)
       p2 = get_parameter_value(current + 2, p2_mode, codes)
-      current = p2 if p1.zero?
+      if p1.zero?
+        current = p2
+      else
+        current +=3
+      end
     when 7
       # less than
       dig1 = get_parameter_value(current + 1, p1_mode, codes)
