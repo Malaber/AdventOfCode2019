@@ -47,7 +47,7 @@ def calculate_output(lines, noun = nil, verb = nil)
   codes[0]
 end
 
-output = calculate_output(lines, 12, 2)
+output = calculate_output(lines)
 
 print 'P1: Code at Position 0: '
 puts output
