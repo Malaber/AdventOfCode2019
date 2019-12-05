@@ -35,7 +35,7 @@ def calculate_output(lines, noun = nil, verb = nil)
     end
   end
 
-  output = codes[0]
+  codes[0]
 end
 
 output = calculate_output(lines, 12, 2)
