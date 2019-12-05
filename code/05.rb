@@ -59,6 +59,16 @@ def calculate_output(lines, noun = nil, verb = nil)
       puts "Output Code:"
       puts get_parameter_value(current + 1, p1_mode, codes)
       current += 2
+    when 5
+      # jump if true
+      p1 = get_parameter_value(current + 1, p1_mode, codes)
+      p2 = get_parameter_value(current + 2, p2_mode, codes)
+      current = p2 unless p1.zero?
+    when 6
+      # jump if false
+      p1 = get_parameter_value(current + 1, p1_mode, codes)
+      p2 = get_parameter_value(current + 2, p2_mode, codes)
+      current = p2 if p1.zero?
     when 7
       # less than
       dig1 = get_parameter_value(current + 1, p1_mode, codes)
