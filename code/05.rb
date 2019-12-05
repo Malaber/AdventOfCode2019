@@ -49,11 +49,13 @@ def calculate_output(lines, noun = nil, verb = nil)
       codes[codes[current + 3]] = dig1 * dig2
       current += 4
     when 3
+      # input
       puts "Input Code:"
       input = gets.chomp
       codes[codes[current + 1]] = input
       current += 2
     when 4
+      # output
       puts "Output Code:"
       puts get_parameter_value(current + 1, p1_mode, codes)
       current += 2
