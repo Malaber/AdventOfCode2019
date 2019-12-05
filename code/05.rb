@@ -1,12 +1,12 @@
 require_relative '../input'
 lines = get_lines $PROGRAM_NAME
 
-def calculate_output(lines, noun, verb)
+def calculate_output(lines, noun = nil, verb = nil)
   codes = lines.first.split(',').map!(&:to_i)
 
 # restore
-  codes[1] = noun
-  codes[2] = verb
+  codes[1] = noun unless noun.nil?
+  codes[2] = verb unless verb.nil?
 
   running = true
   current = 0
