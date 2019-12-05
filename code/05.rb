@@ -17,7 +17,7 @@ def get_parameter_value(position, mode, codes)
   end
 end
 
-def calculate_output(lines, noun = nil, verb = nil)
+def calculate_output(lines, noun = nil, verb = nil, input = nil)
   codes = lines.first.split(',').map!(&:to_i)
 
 # restore
@@ -50,8 +50,7 @@ def calculate_output(lines, noun = nil, verb = nil)
       current += 4
     when 3
       # input
-      puts "Input Code:"
-      input = gets.chomp
+      puts "Input Code: #{input}"
       codes[codes[current + 1]] = input
       current += 2
     when 4
@@ -103,4 +102,9 @@ def calculate_output(lines, noun = nil, verb = nil)
 end
 
 puts 'P1:'
-calculate_output(lines)
+calculate_output(lines, nil, nil, 1)
+
+puts
+
+puts 'P2:'
+calculate_output(lines, nil, nil, 5)
