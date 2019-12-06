@@ -42,10 +42,6 @@ lines.each do | line |
   nodes[p1] << p2
 end
 
-p get_way("YOU", "D", nodes)
-
-puts
-
 p santas_way = get_way_to_com("SAN", nodes).reverse
 p my_way =  get_way_to_com("YOU", nodes).reverse
 p meeting_point = (my_way & santas_way).last
