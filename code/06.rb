@@ -7,12 +7,25 @@ def get_parent_node(node, nodes)
   nodes.select {|n| nodes[n].include?(node)}.keys.first
 end
 
+def get_way(from, to, nodes)
+  parent = get_parent_node(from, nodes)
+  if parent == to
+    [parent]
+  else
+    [parent].concat(get_way(parent, to, nodes))
+  end
+end
+
+def get_way_to_com(node, nodes)
+  get_way(node, "COM", nodes)
+end
+
 def get_distance_from_com(node, nodes)
   parent = get_parent_node(node, nodes)
   if parent == "COM"
-    return 1
+    1
   else
-    return 1 + get_distance_from_com(parent, nodes)
+    1 + get_distance_from_com(parent, nodes)
   end
 end
 
@@ -29,11 +42,15 @@ lines.each do | line |
   nodes[p1] << p2
 end
 
-distance = 0
-unique_nodes.each do |node|
-  unless node == "COM"
-    distance += get_distance_from_com(node, nodes)
-  end
-end
+p get_way("YOU", "D", nodes)
 
-puts distance
+puts
+
+p santas_way = get_way_to_com("SAN", nodes).reverse
+p my_way =  get_way_to_com("YOU", nodes).reverse
+p meeting_point = (my_way & santas_way).last
+
+p santas_way_to_meeting_point = get_way("SAN", meeting_point, nodes)
+p my_way_to_meeting_point = get_way("SAN", meeting_point, nodes)
+
+p santas_way_to_meeting_point.size+my_way_to_meeting_point.size
