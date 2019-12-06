@@ -42,6 +42,17 @@ lines.each do | line |
   nodes[p1] << p2
 end
 
+distance = 0
+unique_nodes.each do |node|
+  unless node == "COM"
+    distance += get_distance_from_com(node, nodes)
+  end
+end
+
+puts "P1: #{distance}"
+
+# P2
+#
 santas_way = get_way_to_com("SAN", nodes).reverse
 my_way =  get_way_to_com("YOU", nodes).reverse
 meeting_point = (my_way & santas_way).last
