@@ -14,8 +14,8 @@ def get_parameter_value(position, mode, codes)
   end
 end
 
-def calculate_output(lines, noun = nil, verb = nil, input = nil)
-  codes = lines.first.split(',').map!(&:to_i)
+def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true)
+  codes = lines.first.split(',').map(&:to_i)
 
 # restore
   codes[1] = noun unless noun.nil?
@@ -23,6 +23,7 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil)
 
   running = true
   current = 0
+  output = []
 
   while running
     op_code_digits = codes[current].digits.reverse
@@ -47,13 +48,19 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil)
       current += 4
     when 3
       # input
-      puts "Input Code: #{input}"
-      codes[codes[current + 1]] = input
+      if input.is_a? Array
+        input_code = input.shift
+      else
+        input_code = input
+      end
+      codes[codes[current + 1]] = input_code
+      puts "Input Code: #{input_code}" if verbose
       current += 2
     when 4
       # output
-      puts "Output Code:"
-      puts get_parameter_value(current + 1, p1_mode, codes)
+      out = get_parameter_value(current + 1, p1_mode, codes)
+      puts "Output Code: #{out}" if verbose
+      output << out
       current += 2
     when 5
       # jump if true
@@ -89,11 +96,14 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil)
       current += 1
       running = false
     else
-      puts 'The ship computer bursts into flames.'
       current += 1
       running = false
+      raise 'The ship computer bursts into flames.'
     end
   end
 
-  codes[0]
+  if output.empty?
+    output = codes[0]
+  end
+  output
 end
