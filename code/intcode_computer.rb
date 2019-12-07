@@ -104,6 +104,8 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true)
 
   if output.empty?
     output = codes[0]
+  elsif output.size == 1
+    output = output.first
   end
   output
 end

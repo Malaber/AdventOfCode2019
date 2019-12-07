@@ -11,11 +11,11 @@ max = 0
     5.times do |c|
       5.times do |d|
         5.times do |e|
-          amp_a = calculate_output(lines, nil, nil, [a, 0], false).first
-          amp_b = calculate_output(lines, nil, nil, [b, amp_a], false).first
-          amp_c = calculate_output(lines, nil, nil, [c, amp_b], false).first
-          amp_d = calculate_output(lines, nil, nil, [d, amp_c], false).first
-          amp_e = calculate_output(lines, nil, nil, [e, amp_d], false).first
+          amp_a = calculate_output(lines, nil, nil, [a, 0], false)
+          amp_b = calculate_output(lines, nil, nil, [b, amp_a], false)
+          amp_c = calculate_output(lines, nil, nil, [c, amp_b], false)
+          amp_d = calculate_output(lines, nil, nil, [d, amp_c], false)
+          amp_e = calculate_output(lines, nil, nil, [e, amp_d], false)
 
           if amp_e > max
             max = amp_e
