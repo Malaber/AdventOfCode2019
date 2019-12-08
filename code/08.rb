@@ -23,6 +23,31 @@ layers.each do |layer|
   end
 end
 
-puts "P1:"
-p minlayer.count(1) * minlayer.count(2)
+puts "P1: #{minlayer.count(1) * minlayer.count(2)}"
 
+puts
+
+puts "P2:"
+squash = []
+
+def get_pixel_color(i, layers)
+  layers.each do |layer|
+    unless layer[i] == 2
+      return layer[i]
+    end
+  end
+end
+
+layers.first.each_with_index do |_pixel, i|
+  squash[i] = get_pixel_color(i, layers)
+end
+
+rows = []
+
+until squash.empty?
+  rows << squash.shift(width)
+end
+
+rows.each do |row|
+  p row.join("").gsub("0", " ").gsub("1", "█")
+end
