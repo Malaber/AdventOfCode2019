@@ -84,7 +84,7 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
       if input.nil? && continuous_mode
         break
       end
-      codes[codes[current + 1]] = input_code
+      set_parameter_value!(current + 1, p1_mode, codes, relative_base, input_code)
       puts "Input Code: #{input_code}" if verbose
       current += 2
     when 4
