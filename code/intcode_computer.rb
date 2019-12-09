@@ -14,7 +14,7 @@ def get_parameter_value(position, mode, codes)
   end
 end
 
-def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true)
+def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true, continuous_mode = false, previous_codestate = nil)
   codes = lines.first.split(',').map(&:to_i)
 
 # restore
@@ -24,6 +24,10 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true)
   running = true
   current = 0
   output = []
+
+  unless previous_codestate.nil?
+    codes = previous_codestate.first
+  end
 
   while running
     op_code_digits = codes[current].digits.reverse
@@ -106,6 +110,8 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true)
     output = codes[0]
   elsif output.size == 1
     output = output.first
+  elsif continuous_mode
+    output = [output, codes, current]
   end
   output
 end
