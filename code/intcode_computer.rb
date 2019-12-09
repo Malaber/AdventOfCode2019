@@ -35,7 +35,7 @@ def set_parameter_value!(position, mode, codes, relative_base, input)
   end
 end
 
-def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true, continuous_mode = false, previous_codestate = nil)
+def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true, continuous_mode = false, previous_codestate = nil, previous_pointer = 0)
   codes = lines.first.split(',').map(&:to_i)
 
 # restore
@@ -43,7 +43,7 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
   codes[2] = verb unless verb.nil?
 
   running = true
-  current = 0
+  current = previous_pointer
   output = []
 
   unless previous_codestate.nil?
@@ -79,6 +79,10 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
         input_code = input.shift
       else
         input_code = input
+      end
+
+      if input.nil? && continuous_mode
+        break
       end
       codes[codes[current + 1]] = input_code
       puts "Input Code: #{input_code}" if verbose
@@ -133,12 +137,12 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
     end
   end
 
-  if output.empty?
+  if continuous_mode
+    output = [output, codes, current, running]
+  elsif output.empty?
     output = codes[0]
   elsif output.size == 1
     output = output.first
-  elsif continuous_mode
-    output = [output, codes, current]
   end
   output
 end
