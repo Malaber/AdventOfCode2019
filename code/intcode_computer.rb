@@ -19,6 +19,22 @@ def get_parameter_value(position, mode, codes, relative_base)
   end
 end
 
+def set_parameter_value!(position, mode, codes, relative_base, input)
+  case mode
+  when 0
+    # position mode
+    codes[codes[position]] = input
+  when 1
+    # immediate mode
+    raise 'AoC states that parameters are never written to in immediate mode'
+  when 2
+    # relative mode
+    codes[codes[position] + relative_base] = input
+  else
+    raise "OP Parameter Mode '#{mode}' not allowed"
+  end
+end
+
 def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true, continuous_mode = false, previous_codestate = nil)
   codes = lines.first.split(',').map(&:to_i)
 
@@ -49,13 +65,13 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
       # addition
       dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
       dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
-      codes[codes[current + 3]] = dig1 + dig2
+      set_parameter_value!(current + 3, p3_mode, codes, relative_base, dig1 + dig2)
       current += 4
     when 2
       # multiplication
       dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
       dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
-      codes[codes[current + 3]] = dig1 * dig2
+      set_parameter_value!(current + 3, p3_mode, codes, relative_base, dig1 * dig2)
       current += 4
     when 3
       # input
@@ -95,13 +111,13 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
       # less than
       dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
       dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
-      codes[codes[current + 3]] = (dig1 < dig2)? 1 : 0
+      set_parameter_value!(current + 3, p3_mode, codes, relative_base, (dig1 < dig2)? 1 : 0)
       current += 4
     when 8
       # equals
       dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
       dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
-      codes[codes[current + 3]] = (dig1 == dig2)? 1 : 0
+      set_parameter_value!(current + 3, p3_mode, codes, relative_base, (dig1 == dig2)? 1 : 0)
       current += 4
     when 9
       # equals
