@@ -3,12 +3,17 @@ def get_next_param_mode!(digits)
   digit.nil? ? 0 : digit
 end
 
-def get_parameter_value(position, mode, codes)
+def get_parameter_value(position, mode, codes, relative_base)
   case mode
   when 0
+    # position mode
     return codes[codes[position]].to_i
   when 1
+    # immediate mode
     return codes[position].to_i
+  when 2
+    # relative mode
+    return codes[codes[position] + relative_base].to_i
   else
     raise "OP Parameter Mode '#{mode}' not allowed"
   end
@@ -29,6 +34,8 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
     codes = previous_codestate.first
   end
 
+  relative_base = 0
+
   while running
     op_code_digits = codes[current].digits.reverse
     op_code = op_code_digits.pop(2).join('').to_i
@@ -40,14 +47,14 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
     case op_code
     when 1
       # addition
-      dig1 = get_parameter_value(current + 1, p1_mode, codes)
-      dig2 = get_parameter_value(current + 2, p2_mode, codes)
+      dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
       codes[codes[current + 3]] = dig1 + dig2
       current += 4
     when 2
       # multiplication
-      dig1 = get_parameter_value(current + 1, p1_mode, codes)
-      dig2 = get_parameter_value(current + 2, p2_mode, codes)
+      dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
       codes[codes[current + 3]] = dig1 * dig2
       current += 4
     when 3
@@ -62,14 +69,14 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
       current += 2
     when 4
       # output
-      out = get_parameter_value(current + 1, p1_mode, codes)
+      out = get_parameter_value(current + 1, p1_mode, codes, relative_base)
       puts "Output Code: #{out}" if verbose
       output << out
       current += 2
     when 5
       # jump if true
-      p1 = get_parameter_value(current + 1, p1_mode, codes)
-      p2 = get_parameter_value(current + 2, p2_mode, codes)
+      p1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      p2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
       if p1.zero?
         current +=3
       else
@@ -77,8 +84,8 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
       end
     when 6
       # jump if false
-      p1 = get_parameter_value(current + 1, p1_mode, codes)
-      p2 = get_parameter_value(current + 2, p2_mode, codes)
+      p1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      p2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
       if p1.zero?
         current = p2
       else
@@ -86,16 +93,20 @@ def calculate_output(lines, noun = nil, verb = nil, input = nil, verbose = true,
       end
     when 7
       # less than
-      dig1 = get_parameter_value(current + 1, p1_mode, codes)
-      dig2 = get_parameter_value(current + 2, p2_mode, codes)
+      dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
       codes[codes[current + 3]] = (dig1 < dig2)? 1 : 0
       current += 4
     when 8
       # equals
-      dig1 = get_parameter_value(current + 1, p1_mode, codes)
-      dig2 = get_parameter_value(current + 2, p2_mode, codes)
+      dig1 = get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      dig2 = get_parameter_value(current + 2, p2_mode, codes, relative_base)
       codes[codes[current + 3]] = (dig1 == dig2)? 1 : 0
       current += 4
+    when 9
+      # equals
+      relative_base += get_parameter_value(current + 1, p1_mode, codes, relative_base)
+      current += 2
     when 99
       current += 1
       running = false
