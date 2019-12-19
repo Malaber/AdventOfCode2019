@@ -19,12 +19,28 @@ p grid.flatten.count(1)
 puts 'P2:'
 
 large_grid = []
+large_grid_dimensions = 1000
 
-1000.times do |x|
+large_grid_dimensions.times do |x|
   puts x if x%100 == 0
-  1000.times do |y|
+  skip = false
+  found_1 = false
+
+  large_grid_dimensions.times do |y|
     large_grid[x] ||= []
-    large_grid[x] << calculate_output(lines, nil, nil, [x,y], false)
+    if skip
+      is_pulling = 0
+    else
+      is_pulling = calculate_output(lines, nil, nil, [x,y], false)
+      if is_pulling == 0
+        if found_1
+          skip = true
+        end
+      else
+        found_1 = true
+      end
+    end
+    large_grid[x] << is_pulling
   end
 end
 
