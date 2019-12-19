@@ -5,12 +5,13 @@ require_relative 'intcode_computer.rb'
 
 puts 'P1:'
 
-pulled_fields = 0
+grid = []
+
 50.times do |x|
   50.times do |y|
-    pulled = calculate_output(lines, nil, nil, [x,y], false)
-    pulled_fields += 1 if pulled == 1
+    grid[x] ||= []
+    grid[x] << calculate_output(lines, nil, nil, [x,y], false)
   end
 end
 
-p pulled_fields
+p grid.flatten.count(1)
