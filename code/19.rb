@@ -15,3 +15,18 @@ grid = []
 end
 
 p grid.flatten.count(1)
+
+puts 'P2:'
+
+large_grid = []
+
+1000.times do |x|
+  puts x if x%100 == 0
+  1000.times do |y|
+    large_grid[x] ||= []
+    large_grid[x] << calculate_output(lines, nil, nil, [x,y], false)
+  end
+end
+
+p large_grid[999].count(1)
+p large_grid.map{|g| g[999]}.count(1)
