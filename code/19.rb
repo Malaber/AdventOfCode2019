@@ -22,17 +22,27 @@ large_grid = []
 large_grid_dimensions = 1000
 
 large_grid_dimensions.times do |x|
-  puts x if x%100 == 0
+  large_grid_dimensions.times do
+    large_grid[x] ||= []
+    large_grid[x] << 0
+  end
+end
+
+left = 0
+right = large_grid_dimensions-1
+
+large_grid.each_with_index do |line, x|
+  puts "#{x}/#{large_grid_dimensions}" if (x % 100).zero?
+
   skip = false
   found_1 = false
 
-  large_grid_dimensions.times do |y|
-    large_grid[x] ||= []
+  (left..right).each do |y|
     if skip
-      is_pulling = 0
+      next
     else
-      is_pulling = calculate_output(lines, nil, nil, [x,y], false)
-      if is_pulling == 0
+      is_pulling = calculate_output(lines, nil, nil, [x, y], false)
+      if is_pulling.zero?
         if found_1
           skip = true
         end
@@ -40,8 +50,15 @@ large_grid_dimensions.times do |x|
         found_1 = true
       end
     end
-    large_grid[x] << is_pulling
+
+    large_grid[x][y] = is_pulling
   end
+
+  first_one = line.index(1)
+  unless first_one.nil?
+    left = first_one - 3
+  end
+  left = 0 if left.negative?
 end
 
 p large_grid[999].count(1)
