@@ -32,34 +32,31 @@ left = 0
 right = large_grid_dimensions-1
 
 large_grid.each_with_index do |line, x|
-  puts "#{x}/#{large_grid_dimensions}" if (x % 100).zero?
+  catch :skip_outer_loop do
+    puts "#{x}/#{large_grid_dimensions}" if (x % 100).zero?
 
-  skip = false
-  found_1 = false
+    found_1 = false
 
-  (left..right).each do |y|
-    if skip
-      next
-    else
+    (left..right).each do |y|
       is_pulling = calculate_output(lines, nil, nil, [x, y], false)
       if is_pulling.zero?
         if found_1
-          skip = true
+          throw :skip_outer_loop
         end
       else
         found_1 = true
       end
+
+      large_grid[x][y] = is_pulling
     end
 
-    large_grid[x][y] = is_pulling
+    first_one = line.index(1)
+    unless first_one.nil?
+      left = first_one - 3
+    end
+    left = 0 if left.negative?
   end
-
-  first_one = line.index(1)
-  unless first_one.nil?
-    left = first_one - 3
-  end
-  left = 0 if left.negative?
 end
 
-p large_grid[999].count(1)
-p large_grid.map{|g| g[999]}.count(1)
+p large_grid[999].count(1),large_grid[999]
+p large_grid.flatten.count(1)
