@@ -54,7 +54,7 @@ large_grid.each_with_index do |line, x|
 
   first_one = line.index(1)
   unless first_one.nil?
-    left = first_one - 3
+    left = first_one - 1
   end
   left = 0 if left.negative?
 end
