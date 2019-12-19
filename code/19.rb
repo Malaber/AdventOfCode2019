@@ -38,19 +38,17 @@ large_grid.each_with_index do |line, x|
   found_1 = false
 
   (left..right).each do |y|
-    if skip
-      next
-    else
-      is_pulling = calculate_output(lines, nil, nil, [x, y], false)
-      if is_pulling.zero?
-        if found_1
-          skip = true
-        end
-      else
-        found_1 = true
-      end
-    end
+    next if skip
 
+    is_pulling = calculate_output(lines, nil, nil, [x, y], false)
+    if is_pulling.zero?
+      if found_1
+        skip = true
+        next
+      end
+    else
+      found_1 = true
+    end
     large_grid[x][y] = is_pulling
   end
 
