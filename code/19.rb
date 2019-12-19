@@ -19,7 +19,7 @@ p grid.flatten.count(1)
 puts 'P2:'
 
 large_grid = []
-large_grid_dimensions = 3000
+large_grid_dimensions = 1200
 santa_dimensions = 100
 
 large_grid_dimensions.times do |x|
