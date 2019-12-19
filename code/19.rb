@@ -19,7 +19,8 @@ p grid.flatten.count(1)
 puts 'P2:'
 
 large_grid = []
-large_grid_dimensions = 1000
+large_grid_dimensions = 3000
+santa_dimensions = 100
 
 large_grid_dimensions.times do |x|
   large_grid_dimensions.times do
@@ -59,5 +60,26 @@ large_grid.each_with_index do |line, x|
   left = 0 if left.negative?
 end
 
-p large_grid[999].count(1)
-p large_grid.map{|g| g[999]}.count(1)
+break_now = false
+santa_x = 0
+santa_y = 0
+
+large_grid.each_with_index do |line, x|
+  line.each_with_index do |tractor, y|
+    next if tractor.zero?
+
+    next unless large_grid[x][y, santa_dimensions].count(1) == santa_dimensions
+
+    next unless large_grid[x, santa_dimensions].map { |i| i[y] }.count(1) == santa_dimensions
+
+    santa_x = x
+    santa_y = y
+
+    break_now = true
+    break
+  end
+
+  break if break_now
+end
+
+puts "P2: #{santa_x * 10_000 + santa_y}, x: #{santa_x}, y: #{santa_y}"
