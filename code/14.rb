@@ -11,9 +11,10 @@ class RecipeBook
   end
 
   def get_recipe(output)
-    valid_recipes = @recipes.select { |r| r.output == output }
+    valid_recipes = @recipes.select { |r| r.output.type == output }
     case valid_recipes.size
     when 0
+      p output
       throw 'No recipe found for that output'
     when 1
       valid_recipes.first
@@ -37,6 +38,9 @@ class Recipe
     @inputs = inputs
     @output = output
   end
+
+  attr_reader :output
+  attr_reader :inputs
 
   def to_s
     string = ''
@@ -63,10 +67,18 @@ class Resource
 
   attr_reader :type
 
+  def amount
+    @amount.size
+  end
+
   def add_amount(amount)
     amount.times do
       @amount << Unit.new
     end
+  end
+
+  def remove_amount(amount)
+    @amount.pop(amount)
   end
 
   def to_s
@@ -77,19 +89,65 @@ end
 class ResourceStash
   def initialize
     @stash = []
+    @ore_pool = []
   end
 
   def add_resource_to_stash(resource, amount)
     resource_in_stash = get_resource_from_stash(resource)
-    if resource_in_stash.nil?
+    if resource_in_stash.empty?
       @stash << Resource.new(resource, amount)
     else
-      resource_in_stash.add_amount(amount)
+      resource_in_stash.first.add_amount(amount)
     end
   end
 
   def get_resource_from_stash(resource)
     @stash.select { |r| r.type == resource }
+  end
+
+  def take_resource_from_stash(resource, amount)
+    # return amount you still need to produce of that resource
+
+    resource_in_stash = get_resource_from_stash(resource).first
+    available_amount = resource_in_stash.nil? ? 0 : resource_in_stash.amount
+    difference = available_amount - amount
+    if difference.zero?
+      @stash.delete(resource_in_stash)
+      0
+    elsif difference.positive?
+      resource_in_stash.remove_amount(amount)
+      0
+    else
+      @stash.delete(resource_in_stash)
+      difference * -1
+    end
+  end
+
+  def produce(resource, amount, recipe_book)
+    if resource == "ORE"
+      amount.times do
+        @ore_pool << Unit.new
+      end
+
+      return
+    end
+
+    amount_to_produce = take_resource_from_stash(resource, amount)
+    if amount_to_produce.zero?
+      nil
+    else
+      recipe = recipe_book.get_recipe(resource)
+      recipe.inputs.each do |input|
+        produce(input.type, input.amount, recipe_book)
+      end
+      difference = recipe.output.amount - amount_to_produce
+      unless difference.zero?
+        difference = difference.abs
+        add_resource_to_stash(resource, difference)
+      end
+    end
+
+    @ore_pool.size
   end
 end
 
@@ -110,4 +168,5 @@ lines.each do |line|
   recipe_book.add_recipe(Recipe.new(inputs, output))
 end
 
-puts recipe_book
+resource_stash = ResourceStash.new
+p resource_stash.produce("FUEL", 1, recipe_book)
